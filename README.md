@@ -59,7 +59,7 @@ Place main.go and main_test.go in your project folder.
 
 Start the app:
 
-go run main.go
+http://localhost:8080
 
 
 Open in browser or Postman:
@@ -70,7 +70,9 @@ http://localhost:8080
 
 Run:
 
+```bash
 curl http://localhost:8080/cart/summary/SKU-REFAC-TEST
+```
 
 Expected Response
 
@@ -83,6 +85,7 @@ total_time_ms should be ~400ms:
   "promotion_message": "Buy 1 Get 1 Half Off!",
   "total_time_ms": 405
 }
+```
 
 🧪 Running Unit Tests
 go test -v .

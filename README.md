@@ -1,72 +1,117 @@
-QuickShip: High-Speed E-commerce Data Aggregation
-QuickShip is a high-speed e-commerce data aggregation service that demonstrates how to concurrently fetch product data (price, inventory, promotions) from multiple microservices to deliver lightning-fast API responses.
-It uses Go’s Fan-Out / Fan-In pattern to slash end-to-end latency.
+## QuickShip: High-Speed E-commerce Data Aggregation
 
-🚀 Why QuickShip Exists
+QuickShip is a high-speed e-commerce data aggregation service that concurrently fetches product data (price, inventory, promotions) from multiple microservices to deliver lightning-fast API responses.  
+It uses Go’s **Fan-Out / Fan-In** concurrency pattern to drastically cut latency.
 
-Modern e-commerce systems rely on many services for real-time product info.
-Calling them sequentially is too slow.
-QuickShip solves this by running all service calls in parallel, returning results as fast as the slowest service.
+---
 
-🎯 Performance Breakdown
-🐢 Sequential Execution (Slow)
+## 🚀 Why QuickShip Exists
+
+Modern e-commerce platforms depend on several microservices to compute real-time product information.  
+Calling them **one-by-one is too slow**.
+
+QuickShip solves this by:
+
+- Running all service calls **in parallel**
+- Returning results as fast as **the slowest service**
+- Ensuring consistent, low-latency API responses
+
+---
+
+## 🎯 Performance Breakdown
+
+### 🐢 Sequential Execution (Slow)
+```
+
 50ms + 200ms + 400ms = 650ms
 
-⚡ Concurrent Execution (QuickShip Speed)
-~400ms (dictated by slowest service)
+```
 
-Service Latencies
-Service	Latency
-fetchPromotionsSimulates	50ms
-fetchPriceSimulates	200ms
-fetchInventorySimulates	400ms
-🧩 Architecture Diagram (Fan-Out / Fan-In)
-             ┌────────────────┐
+### ⚡ Concurrent Execution (QuickShip Speed)
+```
+
+~400ms (determined by the slowest service)
+
+```
+
+### Service Latencies
+
+| Service                   | Latency |
+|---------------------------|---------|
+| fetchPromotionsSimulates | 50ms    |
+| fetchPriceSimulates      | 200ms   |
+| fetchInventorySimulates  | 400ms   |
+
+---
+
+## 🧩 Architecture Diagram (Fan-Out / Fan-In)
+
+```
+
+```
+         ┌────────────────┐
+```
+
 Request  →   │ GetCartSummary │
-             └───────┬────────┘
-                     │
-             (Fan-Out: Launch workers)
-                     ▼
-      ┌──────────────┬──────────────┐
-      ▼              ▼              ▼
- Promotions     Price Service    Inventory
-   Worker          Worker          Worker
- (50ms)           (200ms)         (400ms)
-      └──────────────┬──────────────┘
-                     │
-             (Fan-In: Combine)
-                     ▼
-          Final Cart Summary JSON
+└───────┬────────┘
+│
+(Fan-Out: Launch workers)
+▼
+┌──────────────┬──────────────┐
+▼              ▼              ▼
+Promotions     Price Service    Inventory
+Worker          Worker          Worker
+(50ms)           (200ms)         (400ms)
+└──────────────┬──────────────┘
+│
+(Fan-In: Combine)
+▼
+Final Cart Summary JSON
 
-🧑‍💻 Refactored Code Structure
-Component	Purpose
-GetCartSummary	HTTP endpoint; coordinates request/response.
-fanOutAndAggregate	Core engine for concurrency + aggregation.
-executeService	Standard wrapper for running service functions safely.
-ServiceFn	Type definition for easily pluggable services.
-fetch*Simulates	Mock versions simulating real service delays.
-🛠️ Prerequisites
+````
 
-Go 1.18+
+---
 
-Gorilla Mux
+## 🧑‍💻 Refactored Code Structure
 
-go get github.com/gorilla/mux
+| Component            | Purpose                                              |
+|----------------------|------------------------------------------------------|
+| **GetCartSummary**   | HTTP endpoint; coordinates request & response        |
+| **fanOutAndAggregate** | Core concurrency + aggregation engine               |
+| **executeService**   | Wrapper for safely running service functions         |
+| **ServiceFn**        | Type definition for plug-and-play service functions  |
+| **fetch\*Simulates** | Mock services simulating real external latency       |
 
-▶️ Running the Server
+---
 
-Place main.go and main_test.go in your project folder.
+## 🛠️ Prerequisites
 
-Start the app:
+- Go **1.18+**
+- Gorilla Mux router  
+  ```bash
+  go get github.com/gorilla/mux
+````
 
-http://localhost:8080
+---
+
+## ▶️ Running the Server
+
+Place `main.go` and `main_test.go` in your project directory.
+
+Start the application:
+
+go run main.go
 
 
 Open in browser or Postman:
 
+```
 http://localhost:8080
+```
 
-⚡ Testing the Speed
+---
+
+## ⚡ Testing the Speed
 
 Run:
 
@@ -74,10 +119,9 @@ Run:
 curl http://localhost:8080/cart/summary/SKU-REFAC-TEST
 ```
 
-Expected Response
+### Expected Response (~400ms total):
 
-total_time_ms should be ~400ms:
-
+```json
 {
   "product_id": "SKU-REFAC-TEST",
   "final_price": 49.99,
@@ -87,17 +131,25 @@ total_time_ms should be ~400ms:
 }
 ```
 
-🧪 Running Unit Tests
-go test -v .
+---
 
+## 🧪 Running Unit Tests
+```
+
+```bash
+go test -v .
+```
 
 Tests verify:
 
-endpoints return correct data
+* Correct data returned
+* Concurrency reduces execution time
 
-concurrency reduces total execution time
+---
 
-📂 Project Structure
+## 📂 Project Structure
+
+```
 QuickShip/
 ├── main.go
 ├── main_test.go

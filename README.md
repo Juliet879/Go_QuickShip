@@ -68,18 +68,6 @@ Final Cart Summary JSON
 
 ---
 
-## 🧑‍💻 Refactored Code Structure
-
-| Component            | Purpose                                              |
-|----------------------|------------------------------------------------------|
-| **GetCartSummary**   | HTTP endpoint; coordinates request & response        |
-| **fanOutAndAggregate** | Core concurrency + aggregation engine               |
-| **executeService**   | Wrapper for safely running service functions         |
-| **ServiceFn**        | Type definition for plug-and-play service functions  |
-| **fetch\*Simulates** | Mock services simulating real external latency       |
-
----
-
 ## 🛠️ Prerequisites
 
 - Go **1.18+**
@@ -89,7 +77,7 @@ Final Cart Summary JSON
 ````
 
 ---
-
+````
 ## ▶️ Running the Server
 
 Place `main.go` and `main_test.go` in your project directory.
@@ -157,7 +145,6 @@ QuickShip/
 
 ## 📜 License
 
-MIT License — you are free to use, modify, and distribute this project.
+You are free to use, modify, and distribute this project.
 
-```
 ```

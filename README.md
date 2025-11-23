@@ -1,101 +1,105 @@
 QuickShip: High-Speed E-commerce Data Aggregation
+QuickShip is a high-speed e-commerce data aggregation service that demonstrates how to concurrently fetch product data (price, inventory, promotions) from multiple microservices to deliver lightning-fast API responses.
+It uses Go’s Fan-Out / Fan-In pattern to slash end-to-end latency.
 
-This project demonstrates a critical technique for high-performance e-commerce APIs: concurrently aggregating product data (like price, inventory, and promotions) from multiple independent microservices to ensure a blazing fast checkout experience. It utilizes the Go Fan-Out/Fan-In pattern to achieve maximum speed.
+🚀 Why QuickShip Exists
 
-🎯 Performance Metrics
+Modern e-commerce systems rely on many services for real-time product info.
+Calling them sequentially is too slow.
+QuickShip solves this by running all service calls in parallel, returning results as fast as the slowest service.
 
-The code executes all simulated services in parallel, slashing response latency:
+🎯 Performance Breakdown
+🐢 Sequential Execution (Slow)
+50ms + 200ms + 400ms = 650ms
 
-Service
+⚡ Concurrent Execution (QuickShip Speed)
+~400ms (dictated by slowest service)
 
-Latency
-
-fetchPromotionsSimulates
-
-50ms
-
-fetchPriceSimulates
-
-200ms
-
-fetchInventorySimulates
-
-400ms (Bottleneck)
-
-Sequential Time (Slow): Sum of all service latencies (200ms + 400ms + 50ms = 650ms).
-
-Concurrent Time (QuickShip Speed): Approximately the time of the slowest service (~400ms).
+Service Latencies
+Service	Latency
+fetchPromotionsSimulates	50ms
+fetchPriceSimulates	200ms
+fetchInventorySimulates	400ms
+🧩 Architecture Diagram (Fan-Out / Fan-In)
+             ┌────────────────┐
+Request  →   │ GetCartSummary │
+             └───────┬────────┘
+                     │
+             (Fan-Out: Launch workers)
+                     ▼
+      ┌──────────────┬──────────────┐
+      ▼              ▼              ▼
+ Promotions     Price Service    Inventory
+   Worker          Worker          Worker
+ (50ms)           (200ms)         (400ms)
+      └──────────────┬──────────────┘
+                     │
+             (Fan-In: Combine)
+                     ▼
+          Final Cart Summary JSON
 
 🧑‍💻 Refactored Code Structure
+Component	Purpose
+GetCartSummary	HTTP endpoint; coordinates request/response.
+fanOutAndAggregate	Core engine for concurrency + aggregation.
+executeService	Standard wrapper for running service functions safely.
+ServiceFn	Type definition for easily pluggable services.
+fetch*Simulates	Mock versions simulating real service delays.
+🛠️ Prerequisites
 
-The application's logic is structured for clarity and easy maintenance:
+Go 1.18+
 
-Function/Type
+Gorilla Mux
 
-Responsibility
+go get github.com/gorilla/mux
 
-GetCartSummary
+▶️ Running the Server
 
-The public HTTP endpoint; handles request parsing, timing, and response.
+Place main.go and main_test.go in your project folder.
 
-fanOutAndAggregate
-
-The Core Engine: Manages the concurrent execution (Fan-Out) and gathers all results (Fan-In).
-
-executeService
-
-Standardized wrapper for running any microservice worker and safely reporting results.
-
-ServiceFn
-
-Type definition for external service functions, ensuring easy integration of new services.
-
-fetch*Simulates
-
-Mock implementations simulating external I/O delays and data return.
-
-🚀 Setup and Running
-
-Prerequisites
-
-Go (v1.18 or later)
-
-The Gorilla Mux router:
-
-go get [github.com/gorilla/mux](https://github.com/gorilla/mux)
-
-
-Running the Server
-
-Place the code in main.go and main_test.go into a new Go project directory.
-
-Run the application:
+Start the app:
 
 go run main.go
 
 
-The server will start on http://localhost:8080.
+Open in browser or Postman:
 
-Testing the Speed
+http://localhost:8080
 
-Query the endpoint to observe the concurrent speedup:
+⚡ Testing the Speed
+
+Run:
 
 curl http://localhost:8080/cart/summary/SKU-REFAC-TEST
 
+Expected Response
 
-Expected Output: The total_time_ms should be close to 400ms.
+total_time_ms should be ~400ms:
 
 {
   "product_id": "SKU-REFAC-TEST",
   "final_price": 49.99,
   "available_stock": 120,
   "promotion_message": "Buy 1 Get 1 Half Off!",
-  "total_time_ms": 405  
+  "total_time_ms": 405
 }
 
-
-Running the Unit Test
-
-The included test file, main_test.go, automatically verifies both data correctness and the critical performance gain.
-
+🧪 Running Unit Tests
 go test -v .
+
+
+Tests verify:
+
+endpoints return correct data
+
+concurrency reduces total execution time
+
+📂 Project Structure
+QuickShip/
+├── main.go
+├── main_test.go
+├── go.mod
+└── go.sum
+
+📜 License
+You are free to use, modify, and distribute this project.

@@ -1,5 +1,5 @@
-```md
-# QuickShip: High-Speed E-commerce Data Aggregation
+
+## QuickShip: High-Speed E-commerce Data Aggregation
 
 QuickShip is a high-speed e-commerce data aggregation service that concurrently fetches product data (price, inventory, promotions) from multiple microservices to deliver lightning-fast API responses.  
 It uses Go’s **Fan-Out / Fan-In** concurrency pattern to drastically cut latency.
@@ -29,8 +29,8 @@ QuickShip solves this by:
 ```
 
 ### ⚡ Concurrent Execution (QuickShip Speed)
-```
 
+```
 ~400ms (determined by the slowest service)
 
 ```
@@ -48,10 +48,7 @@ QuickShip solves this by:
 ## 🧩 Architecture Diagram (Fan-Out / Fan-In)
 
 ```
-
-```
          ┌────────────────┐
-```
 
 Request  →   │ GetCartSummary │
 └───────┬────────┘
@@ -69,7 +66,7 @@ Worker          Worker          Worker
 ▼
 Final Cart Summary JSON
 
-````
+```
 
 ---
 
@@ -91,7 +88,7 @@ Final Cart Summary JSON
 - Gorilla Mux router  
   ```bash
   go get github.com/gorilla/mux
-````
+
 
 ---
 
@@ -107,9 +104,9 @@ go run main.go
 
 Open in browser or Postman:
 
-```
+
 http://localhost:8080
-```
+
 
 ---
 

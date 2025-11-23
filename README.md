@@ -48,10 +48,6 @@ QuickShip solves this by:
 
 ```
 
-```
-         ┌────────────────┐
-```
-
 Request  →   │ GetCartSummary │
 └───────┬────────┘
 │

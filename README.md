@@ -5,7 +5,7 @@ It uses Go’s **Fan-Out / Fan-In** concurrency pattern to drastically cut laten
 
 ![Dashboard](./assets/dashboard.png)
 
-![Toolkit guide ](https://docs.google.com/document/d/1dPYXK5CbDxIvK8qaDKIiKjNl-UrFTXKzh3q8zu7GJJ8/edit?usp=sharing)
+[Toolkit guide ](https://docs.google.com/document/d/1dPYXK5CbDxIvK8qaDKIiKjNl-UrFTXKzh3q8zu7GJJ8/edit?usp=sharing)
 ---
 
 ## 🚀 Why QuickShip Exists

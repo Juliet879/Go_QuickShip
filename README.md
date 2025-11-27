@@ -3,9 +3,9 @@
 QuickShip is a high-speed e-commerce data aggregation service that concurrently fetches product data (price, inventory, promotions) from multiple microservices to deliver lightning-fast API responses.  
 It uses Go’s **Fan-Out / Fan-In** concurrency pattern to drastically cut latency.
 
-(./assets/dashboard.png)
+![Dashboard](./assets/dashboard.png)
 
-![Toolkit guide ](https://docs.google.com/document/d/1dPYXK5CbDxIvK8qaDKIiKjNl-UrFTXKzh3q8zu7GJJ8/edit?tab=t.0)
+![Toolkit guide ](https://docs.google.com/document/d/1dPYXK5CbDxIvK8qaDKIiKjNl-UrFTXKzh3q8zu7GJJ8/edit?usp=sharing)
 ---
 
 ## 🚀 Why QuickShip Exists

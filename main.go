@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"quickship_api/pkg/aggregator"
@@ -12,7 +13,7 @@ import (
 )
 
 // --- Configuration ---
-const serverPort = ":8080"
+const defaultPort = ":8080"
 const dashboardPort = ":3000" // React will typically run on 3000
 
 // GetCartSummary is the HTTP entry point.
@@ -45,22 +46,38 @@ func GetCartSummary(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Enable CORS for development between Go and React
+// Enable CORS using the CORS_ORIGIN environment variable.
 func enableCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost"+dashboardPort)
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
+    // Read the allowed origin from the environment variable.
+    // If not set (like in local dev), it defaults to localhost:3000.
+    allowedOrigin := os.Getenv("CORS_ORIGIN")
+    if allowedOrigin == "" {
+        allowedOrigin = "http://localhost:3000" // Default for local dev
+    }
+
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Set the Access-Control-Allow-Origin header using the value from the environment.
+        w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+        
+        if r.Method == "OPTIONS" {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+        next.ServeHTTP(w, r)
+    })
 }
 
 // main sets up the router and starts the HTTP server.
 func main() {
+	serverPort := os.Getenv("PORT") 
+    if serverPort == "" {
+        serverPort = defaultPort
+    } else {
+        serverPort = ":" + serverPort
+    }
+	
 	r := mux.NewRouter()
 
 	// Use CORS middleware
@@ -71,8 +88,9 @@ func main() {
 	
 	// Add a simple route for testing connectivity
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(map[string]bool{"ok": true})
-	}).Methods("GET")
+        w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+    }).Methods("GET")
 
 
 	log.Printf("Server starting on http://localhost%s", serverPort)

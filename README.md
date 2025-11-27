@@ -49,9 +49,6 @@ QuickShip solves this by:
 
 ## 🧩 Architecture Diagram (Fan-Out / Fan-In)
 
-```
-
-```
          ┌────────────────┐
 ```
 
@@ -75,18 +72,6 @@ Final Cart Summary JSON
 
 ---
 
-## 🧑‍💻 Refactored Code Structure
-
-| Component            | Purpose                                              |
-|----------------------|------------------------------------------------------|
-| **GetCartSummary**   | HTTP endpoint; coordinates request & response        |
-| **fanOutAndAggregate** | Core concurrency + aggregation engine               |
-| **executeService**   | Wrapper for safely running service functions         |
-| **ServiceFn**        | Type definition for plug-and-play service functions  |
-| **fetch\*Simulates** | Mock services simulating real external latency       |
-
----
-
 ## 🛠️ Prerequisites
 
 - Go **1.18+**
@@ -96,15 +81,16 @@ Final Cart Summary JSON
 ````
 
 ---
-
+````
 ## ▶️ Running the Server
 
 Place `main.go` and `main_test.go` in your project directory.
 
 Start the application:
 
+```bash
 go run main.go
-
+```
 
 Open in browser or Postman:
 
@@ -137,7 +123,6 @@ curl http://localhost:8080/cart/summary/SKU-REFAC-TEST
 ---
 
 ## 🧪 Running Unit Tests
-```
 
 ```bash
 go test -v .
@@ -158,6 +143,11 @@ QuickShip/
 ├── main_test.go
 ├── go.mod
 └── go.sum
+```
+
+---
+
+## 📜 License
 
 📜 License
 You are free to use, modify, and distribute this project.

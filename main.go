@@ -83,8 +83,22 @@ func main() {
 	// Use CORS middleware
 	r.Use(enableCORS)
 
+
+
 	// Define the route with a variable SKU path.
 	r.HandleFunc("/cart/summary/{sku}", GetCartSummary).Methods("GET")
+
+	// --- ADD THIS HANDLER FOR THE ROOT PATH ("/") ---
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{
+			"status": "ok",
+			"service": "QuickShip API Gateway is running",
+			"usage": "Use /cart/summary/{sku} to fetch data",
+			"health": "/health",
+		})
+	}).Methods("GET")
 	
 	// Add a simple route for testing connectivity
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {

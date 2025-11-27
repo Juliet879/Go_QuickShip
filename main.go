@@ -86,10 +86,11 @@ func main() {
 	// Define the route with a variable SKU path.
 	r.HandleFunc("/cart/summary/{sku}", GetCartSummary).Methods("GET")
 	
-	// // Add a simple route for testing connectivity
-	// r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-	// 	json.NewEncoder(w).Encode(map[string]bool{"ok": true})
-	// }).Methods("GET")
+	// Add a simple route for testing connectivity
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+    }).Methods("GET")
 
 
 	log.Printf("Server starting on http://localhost%s", serverPort)
